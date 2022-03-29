@@ -1,0 +1,7 @@
+{
+  "break_alert": {
+    "sounds": [
+      "antitoolbreak:break_alert"
+    ]
+  }
+}

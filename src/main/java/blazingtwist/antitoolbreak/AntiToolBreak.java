@@ -11,6 +11,9 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 public class AntiToolBreak implements ModInitializer {
 	private static final Item[] woodenItems = {
@@ -96,6 +99,10 @@ public class AntiToolBreak implements ModInitializer {
 		return lastCheckedStatus;
 	}
 
+	//Add sounds here
+	public static final Identifier BREAK_ALERT = new Identifier("antitoolbreak:break_alert");
+	public static SoundEvent BREAK_ALERT_EVENT = new SoundEvent(BREAK_ALERT);
+
 	@Override
 	public void onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -103,7 +110,8 @@ public class AntiToolBreak implements ModInitializer {
 		// Proceed with mild caution.
 
 		AutoConfig.register(AntiToolBreakConfig.class, GsonConfigSerializer::new);
-
 		configHolder = AutoConfig.getConfigHolder(AntiToolBreakConfig.class);
+		//Register alert event
+		Registry.register(Registry.SOUND_EVENT, AntiToolBreak.BREAK_ALERT, BREAK_ALERT_EVENT);
 	}
 }

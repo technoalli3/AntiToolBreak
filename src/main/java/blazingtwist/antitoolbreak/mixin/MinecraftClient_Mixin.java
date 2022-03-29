@@ -10,13 +10,11 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.client.sound.Sound;
 import net.minecraft.client.sound.SoundManager;
-import net.minecraft.client.sound.StaticSound;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundCategory;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,6 +23,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import static blazingtwist.antitoolbreak.AntiToolBreak.BREAK_ALERT_EVENT;
 
 @Environment(EnvType.CLIENT)
 @Mixin(MinecraftClient.class)
@@ -91,6 +91,7 @@ public abstract class MinecraftClient_Mixin {
 	@Inject(method = "handleBlockBreaking(Z)V", at = @At("HEAD"), cancellable = true)
 	public void onHandleBlockBreaking(boolean isBreakPressed, CallbackInfo info) {
 		if (isBreakPressed && shouldPreventUsage(player.getInventory().getMainHandStack())) {
+			player.playSound(BREAK_ALERT_EVENT, SoundCategory.PLAYERS, 1f, 1f);
 			interactionManager.cancelBlockBreaking();
 			info.cancel();
 		}
@@ -100,6 +101,7 @@ public abstract class MinecraftClient_Mixin {
 	@Inject(method = "doAttack()Z", at = @At("HEAD"), cancellable = true)
 	public void onDoAttack(CallbackInfoReturnable<Boolean> info) {
 		if (shouldPreventUsage(player.getInventory().getMainHandStack())) {
+			player.playSound(BREAK_ALERT_EVENT, SoundCategory.PLAYERS, 1f, 1f);
 			info.setReturnValue(false);
 			info.cancel();
 		}
@@ -109,6 +111,7 @@ public abstract class MinecraftClient_Mixin {
 	@Inject(method = "doItemUse()V", at = @At("HEAD"), cancellable = true)
 	public void onDoItemUse(CallbackInfo info) {
 		if (shouldPreventUsage(player.getInventory().getMainHandStack())) {
+			player.playSound(BREAK_ALERT_EVENT, SoundCategory.PLAYERS, 1f, 1f);
 			info.cancel();
 		}
 	}
