@@ -10,8 +10,15 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
+import net.minecraft.client.sound.Sound;
+import net.minecraft.client.sound.SoundManager;
+import net.minecraft.client.sound.StaticSound;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundEvent;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,6 +35,10 @@ public abstract class MinecraftClient_Mixin {
 
 	@Shadow
 	public ClientPlayerEntity player;
+
+	@Shadow @Final private SoundManager soundManager;
+
+	@Shadow @Nullable public Entity cameraEntity;
 
 	private boolean shouldPreventUsage(ItemStack itemStack) {
 		AntiToolBreakConfig config = AntiToolBreak.getConfig();
